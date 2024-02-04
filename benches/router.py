@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_users import FastAPIUsers
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.auth import auth_backend
@@ -44,6 +44,15 @@ async def get_bench(bench_id: int, session: AsyncSession = Depends(get_async_ses
                 "details": None}
     except:
         return {"status": "error"}
+
+@router.get("/nearest_bench/")
+async def get_nearest_bench(latitude: float, longitude: float, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(Bench).order_by(
+    func.pow(Bench.latitude - latitude, 2) + func.pow(Bench.longitude - longitude, 2)
+    ))
+    nearest_point = result.scalars().first()
+
+    return {'latitude': nearest_point.latitude, 'longitude': nearest_point.longitude}
 
 @router.post("/bench/create")
 async def create_bench(operation: BenchCreate, session: AsyncSession = Depends(get_async_session), user: User = Depends(current_active_user)):

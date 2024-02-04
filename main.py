@@ -12,7 +12,7 @@ from benches.router import router as benches_router
 from users.router import router as users_router
 
 app = FastAPI(
-    title='asdasddsadss'
+    title='Bench app'
 )
 
 origins = [

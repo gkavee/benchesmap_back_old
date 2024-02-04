@@ -28,7 +28,7 @@ async def get_benches(limit: int, offset: int, session: AsyncSession = Depends(g
         return {"status": "success",
                 "data": result.mappings().all()[offset:][:limit],
                 "details": None}
-    except:
+    except Exception:
         return {"status": "error"}
 
 @router.get("/bench/{bench_id}")
@@ -42,7 +42,7 @@ async def get_bench(bench_id: int, session: AsyncSession = Depends(get_async_ses
         return {"status": "success",
                 "data": bench,
                 "details": None}
-    except:
+    except Exception:
         return {"status": "error"}
 
 @router.get("/nearest_bench/")
@@ -61,5 +61,5 @@ async def create_bench(operation: BenchCreate, session: AsyncSession = Depends(g
         await session.execute(stmt)
         await session.commit()
         return {"status": "success"}
-    except:
+    except Exception:
         return {"status": "error"}

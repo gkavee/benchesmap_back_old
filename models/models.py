@@ -9,7 +9,7 @@ Base = declarative_base(metadata=metadata)
 class Bench(Base):
     __tablename__ = 'bench'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     latitude = Column(Float)
     longitude = Column(Float)
@@ -19,7 +19,7 @@ class Bench(Base):
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, index=True)
     email = Column(String, nullable=False)
     username = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)

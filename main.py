@@ -45,12 +45,6 @@ app.include_router(
     tags=["auth"],
 )
 
-current_active_user = fastapi_users.current_user(active=True)
-
-@app.get("/", response_class=HTMLResponse)
-async def read_root(user: User = Depends(current_active_user)):
-    html_content = f"<h1 align=center style=\"color: red\";>eblan (= {user.username}</h1>"
-    return HTMLResponse(content=html_content)
 
 app.include_router(benches_router)
 app.include_router(users_router)

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_users import FastAPIUsers
-from sqlalchemy import select, insert, func
+from sqlalchemy import select, insert, func, delete, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.auth import auth_backend
@@ -54,6 +54,8 @@ async def get_nearest_bench(latitude: float, longitude: float, session: AsyncSes
 
     return {'latitude': nearest_point.latitude, 'longitude': nearest_point.longitude}
 
+from sqlalchemy.exc import SQLAlchemyError
+
 @router.post("/bench/create")
 async def create_bench(operation: BenchCreate, session: AsyncSession = Depends(get_async_session), user: User = Depends(current_active_user)):
     try:
@@ -61,5 +63,21 @@ async def create_bench(operation: BenchCreate, session: AsyncSession = Depends(g
         await session.execute(stmt)
         await session.commit()
         return {"status": "success"}
-    except Exception:
-        return {"status": "error"}
+    except SQLAlchemyError as e:
+        return {"status": "error", "message": str(e)}
+
+@router.delete("/bench/delete")
+async def delete_bench(bench_name: str, session: AsyncSession = Depends(get_async_session), user: User = Depends(current_active_user)):
+    try:
+        stmt = delete(Bench).where(and_(Bench.name == bench_name, Bench.creator_id == user.id))
+        result = await session.execute(stmt)
+        if result.rowcount > 0:
+            await session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "error", "message": "Bench not found or you are not the creator"}
+    except SQLAlchemyError as e:
+        return {"status": "error", "message": str(e)}
+
+
+

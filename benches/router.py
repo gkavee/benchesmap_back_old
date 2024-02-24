@@ -9,6 +9,8 @@ from auth.manager import get_user_manager
 from benches.schemas import BenchCreate
 from models.models import Bench, User
 
+from fastapi_cache.decorator import cache
+
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
     [auth_backend],
@@ -21,6 +23,7 @@ router = APIRouter(
 )
 
 @router.get("/benches")
+@cache(expire=60)
 async def get_benches(limit: int, offset: int, session: AsyncSession = Depends(get_async_session)):
     try:
         query = select(Bench)

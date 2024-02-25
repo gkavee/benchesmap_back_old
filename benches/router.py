@@ -4,7 +4,7 @@ from sqlalchemy import select, insert, func, delete, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.auth import auth_backend
-from auth.database import get_async_session
+from database import get_async_session
 from auth.manager import get_user_manager
 from benches.schemas import BenchCreate
 from models.models import Bench, User

@@ -1,4 +1,17 @@
-.env
+# Virtual environment (if used)
+venv/
+venv*/
+*.venv
+.env/
+
+# Editor specific files
 .idea/
-*__pycache__/
 migrations/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.env

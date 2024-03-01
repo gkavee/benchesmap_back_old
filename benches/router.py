@@ -28,11 +28,12 @@ async def get_benches(limit: int, offset: int, session: AsyncSession = Depends(g
     try:
         query = select(Bench)
         result = await session.execute(query)
+        benches = result.scalars().all()
         return {"status": "success",
-                "data": result.mappings().all()[offset:][:limit],
+                "data": benches[offset:][:limit],
                 "details": None}
-    except Exception:
-        return {"status": "error"}
+    except Exception as e:
+        return {"status": "error", "details": str(e)}
 
 @router.get("/bench/{bench_id}")
 async def get_bench(bench_id: int, session: AsyncSession = Depends(get_async_session)):

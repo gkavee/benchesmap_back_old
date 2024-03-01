@@ -10,7 +10,7 @@ class Bench(Base):
     __tablename__ = 'bench'
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
+    name = Column(String, nullable=False)
     description = Column(String)
     count = Column(Integer)
     latitude = Column(Float)

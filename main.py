@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from benches.router import router as benches_router
+from config import REDIS_HOST, REDIS_PORT
 from users.router import router as users_router
 from auth.router import router as auth_router
 
@@ -34,5 +35,5 @@ app.include_router(auth_router)
 
 @app.on_event("startup")
 async def startup():
-    redis = aioredis.from_url("redis://localhost")
+    redis = aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}", encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")

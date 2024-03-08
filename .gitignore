@@ -3,6 +3,7 @@ venv/
 venv*/
 *.venv
 .env/
+.env
 
 # Editor specific files
 .idea/

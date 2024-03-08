@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:16
+    container_name: db_app
+    command: -p 5432
+    expose:
+      - 5432
+    env_file:
+      - .env-non-dev
+
+  redis:
+    image: redis:7
+    container_name: redis_app
+    ports:
+      - 6379:6379
+    expose:
+      - 6379
+
+  app:
+    build:
+      context: .
+    env_file:
+      - .env-non-dev
+    container_name: fastapi_app
+    command: >
+      sh -c "wait-for-it db:5432 -- alembic upgrade head && gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000"
+    ports:
+      - 9999:8000
+    depends_on:
+      - db
+      - redis

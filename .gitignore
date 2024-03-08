@@ -13,9 +13,3 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-.env
-
-#Docker
-Dockerfile
-app.sh
